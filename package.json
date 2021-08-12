@@ -1,25 +1,32 @@
 {
-  "name": "bugfixerj",
+	"name": "bugfixerj",
 	"displayName": "BugfixerJ",
 	"description": "",
 	"version": "0.0.1",
 	"engines": {
-		"vscode": "^1.59.0"
+		"vscode": "^1.54.0"
 	},
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:bugfixerj.helloWorld"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "bugfixerj.helloWorld",
-				"title": "Hello World"
+				"command": "extension.runBugfixer",
+        "title": "Bugfixer 실행"
 			}
-		]
+		],
+		"menus": {
+      "explorer/context": [
+        {
+          "command": "extension.runBugfixer"
+        }
+      ]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
