@@ -19,35 +19,19 @@ export class BugfixerController {
   }
 
   protected analyse() {    
-    let args: string[] = [];
-
-    args.push("-jar"); 
-    args.push("D:\\dev\\autofix\\astor\\target\\astor-1.1.0-jar-with-dependencies.jar");
-    args.push("-location");
-    args.push("D:\\dev\\autofix\\astor\\examples\\math_70");
-    args.push("-mode");
-    args.push("jKali" );
-    args.push("-package");
-    args.push("org.apache.commons" );
-    args.push("-jvm4testexecution");
-    args.push("C:\\open-jdk8.0-x64\\bin\\" );
-    args.push("-failing" );
-    args.push("org.apache.commons.math.analysis.solvers.BisectionSolverTest" );
-    args.push("-srcjavafolder");
-    args.push("/src/java/" );
-    args.push("-srctestfolder" );
-    args.push("/src/test/" );
-    args.push("-binjavafolder" );
-    args.push("/target/classes" );
-    args.push("-bintestfolder" );
-    args.push("/target/test-classes" );
-    args.push("-flthreshold" );
-    args.push("0.5" );
-    args.push("-stopfirst" );
-    args.push("true" );
-    args.push("-dependencies" );
-    args.push("D:\\dev\\autofix\\astor\\examples\\libs\\junit-4.4.jar");
-
+    let args: string[] = [
+    "run",
+    "--rm",
+    "-v",
+    "/Users/chjkw/dev/autofix/defects4j/output:/results",
+    "tdurieux/astor",
+    "-i",
+    "Math_70", 
+    "--scope",
+    "package",
+    "--parameters",
+    "mode:jGenProg"];
+    
     vscode.window.showInformationMessage(args.join(" "));
 
     window.withProgress({
@@ -63,7 +47,7 @@ export class BugfixerController {
         let errmsg = "";
 
         let bugfixer = child_process.spawn(
-          "java",
+          'docker',
           args,
           {cwd:""}
         );
@@ -72,6 +56,12 @@ export class BugfixerController {
         bugfixer.stdout.on("data", data => {
             let log: string = data.toString();
             result += log;
+
+            if(log.toString().trim().startsWith("[")) {
+              let re = /\[[^\]]*\]/g;
+              log = log.replace(re, "");
+              progress.report({ message: log});
+            }
         });
 
         bugfixer.on("exit", (code) => {
