@@ -11,26 +11,31 @@ export class BugfixerController {
   private _commandForAnalysis: Disposable;
 
   public constructor(private context: vscode.ExtensionContext) {
-    this._commandForAnalysis = commands.registerCommand("extension.runBugfixer", () => this.analyse());
+    this._commandForAnalysis = commands.registerCommand("extension.runBugfixer", 
+    (uri:vscode.Uri) => {
+      this.analyse(uri.fsPath);
+    });
   }
 
   public dispose() {
     this._commandForAnalysis.dispose();
   }
 
-  protected analyse() {    
+  protected analyse(location: string) {    
     let args: string[] = [
     "run",
     "--rm",
     "-v",
-    "/Users/chjkw/dev/autofix/defects4j/output:/results",
+    "D:\\dev\\autofix\\astor\\output:/results",
+    "-v",
+    `${location}:/mnt/src`,
     "tdurieux/astor",
     "-i",
     "Math_70", 
     "--scope",
     "package",
     "--parameters",
-    "mode:jGenProg"];
+    "mode:jGenProg:location:/mnt/src"];
     
     vscode.window.showInformationMessage(args.join(" "));
 
