@@ -5,7 +5,9 @@ import {
   ProgressLocation   } from "vscode";
 
 import * as child_process from "child_process";
+import * as path from "path";
 import * as vscode from "vscode";
+import { stringify } from "querystring";
 
 export class BugfixerController {
   private _commandForAnalysis: Disposable;
@@ -13,7 +15,7 @@ export class BugfixerController {
   public constructor(private context: vscode.ExtensionContext) {
     this._commandForAnalysis = commands.registerCommand("extension.runBugfixer", 
     (uri:vscode.Uri) => {
-      this.analyse(uri.fsPath);
+      this.analyse(uri);
     });
   }
 
@@ -21,21 +23,27 @@ export class BugfixerController {
     this._commandForAnalysis.dispose();
   }
 
-  protected analyse(location: string) {    
+  protected analyse(uri: vscode.Uri) {    
+    let workspacePath = vscode.workspace.getWorkspaceFolder(uri)?.uri.fsPath;
+
+    let location = uri.fsPath;
+    let id = path.basename(location)
+
     let args: string[] = [
     "run",
     "--rm",
     "-v",
-    "D:\\dev\\autofix\\astor\\output:/results",
-    "-v",
-    `${location}:/mnt/src`,
+    `${location}/output:/results`,
+    //"-v",
+    //`${location}:/mnt/src`,
     "tdurieux/astor",
     "-i",
-    "Math_70", 
+    `${id}`, 
     "--scope",
     "package",
     "--parameters",
-    "mode:jGenProg:location:/mnt/src"];
+    //"mode:jGenProg:location:/mnt/src"];
+    "mode:jGenProg"];
     
     vscode.window.showInformationMessage(args.join(" "));
 
