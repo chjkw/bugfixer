@@ -13,7 +13,7 @@ export class BugfixerController {
   private _commandForAnalysis: Disposable;
 
   public constructor(private context: vscode.ExtensionContext) {
-    this._commandForAnalysis = commands.registerCommand("extension.runBugfixer", 
+    this._commandForAnalysis = commands.registerCommand("autofix.runBugfixer", 
     (uri:vscode.Uri) => {
       this.analyse(uri);
     });
@@ -34,15 +34,12 @@ export class BugfixerController {
     "--rm",
     "-v",
     `${location}/output:/results`,
-    //"-v",
-    //`${location}:/mnt/src`,
     "tdurieux/astor",
     "-i",
     `${id}`, 
     "--scope",
     "package",
     "--parameters",
-    //"mode:jGenProg:location:/mnt/src"];
     "mode:jGenProg"];
     
     vscode.window.showInformationMessage(args.join(" "));

@@ -14,18 +14,50 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"colors": [
+			{
+			  "id": "autofix.addBackGround",
+			  "description": "Add",
+			  "defaults": {
+				"dark": "#bb4e4ea4",
+				"light": "#bb4e4e",
+				"highContrast": "#3a2c2c55"
+			  }
+			},
+			{
+				"id": "autofix.removeBackGround",
+				"description": "Delete",
+				"defaults": {
+				  "dark": "#bb4e4ea4",
+				  "light": "#bb4e4e",
+				  "highContrast": "#3a2c2c55"
+				}
+			  }
+		  ],
 		"commands": [
 			{
 				"command": "extension.runBugfixer",
-        "title": "Bugfixer 실행"
+				"title": "Bugfixer 실행"
+			},
+			{
+				"command": "extension.open",
+				"title": "[BugFixer] File Open"
+			},
+			{
+				"command": "extension.setFocus",
+				"title": "[BugFixer] Set Focus"
+			},
+			{
+				"command": "extension.deco",
+				"title": "[BugFixer] Deco"
 			}
 		],
 		"menus": {
-      "explorer/context": [
-        {
-          "command": "extension.runBugfixer"
-        }
-      ]
+			"explorer/context": [
+				{
+					"command": "extension.runBugfixer"
+				}
+			]
 		}
 	},
 	"scripts": {
@@ -37,16 +69,22 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.59.0",
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.2.2",
 		"@types/node": "14.x",
-		"eslint": "^7.27.0",
+		"@types/vscode": "^1.59.0",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
+		"eslint": "^7.27.0",
 		"glob": "^7.1.7",
 		"mocha": "^8.4.0",
 		"typescript": "^4.3.2",
 		"vscode-test": "^1.5.2"
+	},
+	"dependencies": {
+		"class-transformer": "^0.4.0",
+		"es6-shim": "^0.35.6",
+		"parse-diff": "^0.8.1",
+		"reflect-metadata": "^0.1.13"
 	}
 }
