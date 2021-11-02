@@ -50,6 +50,10 @@
 			{
 				"command": "extension.deco",
 				"title": "[BugFixer] Deco"
+			},
+			{
+				"command": "bugfixer.showProgress",
+				"title": "[BigFixer] Show Progress Page"
 			}
 		],
 		"menus": {
