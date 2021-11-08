@@ -13,43 +13,15 @@
 		"*"
 	],
 	"main": "./out/extension.js",
-	"contributes": {
-		"colors": [
-			{
-			  "id": "autofix.addBackGround",
-			  "description": "Add",
-			  "defaults": {
-				"dark": "#bb4e4ea4",
-				"light": "#bb4e4e",
-				"highContrast": "#3a2c2c55"
-			  }
-			},
-			{
-				"id": "autofix.removeBackGround",
-				"description": "Delete",
-				"defaults": {
-				  "dark": "#bb4e4ea4",
-				  "light": "#bb4e4e",
-				  "highContrast": "#3a2c2c55"
-				}
-			  }
-		  ],
+	"contributes": {		
 		"commands": [
 			{
-				"command": "extension.runBugfixer",
+				"command": "bugfixer.run",
 				"title": "Bugfixer 실행"
 			},
 			{
-				"command": "extension.open",
+				"command": "bugfixer.diff",
 				"title": "[BugFixer] File Open"
-			},
-			{
-				"command": "extension.setFocus",
-				"title": "[BugFixer] Set Focus"
-			},
-			{
-				"command": "extension.deco",
-				"title": "[BugFixer] Deco"
 			},
 			{
 				"command": "bugfixer.showProgress",
@@ -59,7 +31,7 @@
 		"menus": {
 			"explorer/context": [
 				{
-					"command": "extension.runBugfixer"
+					"command": "bugfixer.run"
 				}
 			]
 		}

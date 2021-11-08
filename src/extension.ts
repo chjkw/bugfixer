@@ -8,7 +8,7 @@ import {WebviewController} from './controller/webviewController'
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	let bugfixer = new BugfixerController(context);
+	const bugfixer = new BugfixerController(context);
 	context.subscriptions.push(bugfixer);
 	
 	const f = new FileController(context);	

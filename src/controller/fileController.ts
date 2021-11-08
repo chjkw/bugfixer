@@ -5,16 +5,14 @@ import EditorManager from '../ide/editorManager';
 
 export class FileController {
   constructor(private context: vscode.ExtensionContext) {
-    vscode.commands.registerCommand('extension.open', (file) => this.open(file));
-    vscode.commands.registerCommand('extension.setFocus', () => this.echo());
-    vscode.commands.registerCommand('extension.deco', () => this.echo());	
+    vscode.commands.registerCommand('bugfixer.diff', (src, dst) => this.diff(src, dst));
   }
 
   private echo() {
 	  console.log("hello");
   }
 
-  private async open(path: string) {
+  private async diff(src: string, dst: string) {
 	  const em = new EditorManager();
 
     var path = '/Users/chjkw/dev/autofix/astor/examples/chart_output/Defects4J/Chart/5/jGenProg/0/astor_output.json';

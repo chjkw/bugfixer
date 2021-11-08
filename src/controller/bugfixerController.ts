@@ -7,13 +7,13 @@ import {
 import * as child_process from "child_process";
 import * as path from "path";
 import * as vscode from "vscode";
-import { stringify } from "querystring";
+import { kill } from "process";
 
 export class BugfixerController {
   private _commandForAnalysis: Disposable;
 
   public constructor(private context: vscode.ExtensionContext) {
-    this._commandForAnalysis = commands.registerCommand("autofix.runBugfixer", 
+    this._commandForAnalysis = commands.registerCommand("bugfixer.run", 
     (uri:vscode.Uri) => {
       this.analyse(uri);
     });
@@ -27,7 +27,7 @@ export class BugfixerController {
     let workspacePath = vscode.workspace.getWorkspaceFolder(uri)?.uri.fsPath;
 
     let location = uri.fsPath;
-    let id = path.basename(location)
+    let id = path.basename(location);
 
     let args: string[] = [
     "run",
@@ -43,6 +43,8 @@ export class BugfixerController {
     "mode:jGenProg"];
     
     vscode.window.showInformationMessage(args.join(" "));
+
+    vscode.commands.executeCommand('bugfixer.showProgress');
 
     window.withProgress({
       location: ProgressLocation.Notification,
@@ -65,13 +67,10 @@ export class BugfixerController {
         bugfixer.stderr.on("data", data => (errmsg += data.toString()));
         bugfixer.stdout.on("data", data => {
             let log: string = data.toString();
-            result += log;
+            //result += log;
 
-            if(log.toString().trim().startsWith("[")) {
-              let re = /\[[^\]]*\]/g;
-              log = log.replace(re, "");
-              progress.report({ message: log});
-            }
+            this.pushLog(log);
+            progress.report({ message: log});
         });
 
         bugfixer.on("exit", (code) => {
@@ -80,11 +79,13 @@ export class BugfixerController {
             vscode.window.showInformationMessage("Astor 실행이 완료되었습니다.");
           } else if (canceled) {
             vscode.window.showInformationMessage(`Astor 실행이 취소되었습니다.`);
+            bugfixer.kill();
           }
           else {
             progress.report({ increment: 100, message: "실행 실패" });
             vscode.window.showErrorMessage("Astor 실행이 실패했습니다.\n" + errmsg);
           }
+
           resolve(0);
         });
       });;  
@@ -92,5 +93,9 @@ export class BugfixerController {
       
       return p;
     });
+  }
+
+  private pushLog(log: string) {
+    vscode.commands.executeCommand('bugfixer.pushLog', log);
   }
 }

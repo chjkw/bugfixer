@@ -11,34 +11,59 @@
     <body>
         <div class="uk-container uk-padding">
             <div class="uk-timeline" id="timeline">
+                <div class="uk-timeline-item row">
+                    <div class="uk-timeline-icon">
+                        <span class="uk-badge" name="badge"><div uk-spinner id="spinner"></div></span>
+                    </div>
+                    <div class="uk-timeline-content">
+                        <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
+                            <section class="uk-sticky-card-wrapper">
+                            <div class="uk-sticky-card-header">
+                                <div class="uk-grid-small uk-flex-middle uk-sticky-card-header-data" uk-grid>
+                                    <h3 class="uk-card-title">BugFixer 시작</h3>
+                                    <span class="uk-label uk-label-warning uk-margin-auto-left" name="status">진행 중</span>
+                                </div>
+                            </div>
+                            </section>
+                            <div class="uk-card-body" name="timeline-log">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
     <script>
-        
+        function addBox(title) {
+            //remove previous spinner
+            var badges = document.querySelectorAll("[name='badge']");
+            var badge = badges[badges.length - 1];
 
+            var oldSpinner = document.querySelector("[id=spinner]");
+            badge.removeChild(oldSpinner);
+            
+            //create check
+            var check = document.createElement("span");
+            check.setAttribute('uk-icon', "check");
+            check.setAttribute('class', "uk-icon");
 
-        $(function () {
-        const vscode = acquireVsCodeApi();
+            badge.appendChild(check);
+          
+            //change status 
+            var statusList = document.querySelectorAll("[name='status']");
+            var status = statusList[statusList.length - 1];
 
-        $(document).ready(() => {
-            vscode.postMessage({ command: 'ready' });
-        });
+            status.setAttribute("class", "uk-label uk-label-success uk-margin-auto-left");
+            status.innerText = "완료";
 
-
-        var fnShowError = function (e) {
-            vscode.postMessage({ command: 'debug', data: e});
-        }
-
-        var addBox = function(title, status) {
+            // create a box
             const div = document.createElement('div');
 
-            div.className = 'row';
-
+            div.className = 'uk-timeline-item row';
             div.innerHTML = `
-            <div class="uk-timeline-item">
+            
                 <div class="uk-timeline-icon">
-                    <span class="uk-badge"><span uk-icon="check"></span></span>
+                    <span class="uk-badge" name="badge"><div uk-spinner id="spinner"></div></span>
                 </div>
                 <div class="uk-timeline-content">
                     <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
@@ -46,7 +71,7 @@
                         <div class="uk-sticky-card-header">
                             <div class="uk-grid-small uk-flex-middle uk-sticky-card-header-data" uk-grid>
                                 <h3 class="uk-card-title">${title}</h3>
-                                <span class="uk-label uk-label-warning uk-margin-auto-left">${status}</span>
+                                <span class="uk-label uk-label-warning uk-margin-auto-left" name="status">진행 중</span>
                             </div>
                         </div>
                         </section>
@@ -54,13 +79,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
             `;
-
             document.getElementById('timeline').appendChild(div);
         }
 
-        var addLog = function(log) {
+        function addLog(log) {
             var para = document.createElement("P");               // Create a <p> element
             para.innerText = log;               // Insert text
             //document.getElementsByName('timeline-body').appendChild(para);
@@ -68,6 +91,7 @@
             var nodes = document.querySelectorAll("[name='timeline-log']:last-child");
             var node = nodes[nodes.length - 1];
             node.appendChild(para);
+            node.scrollTop = node.scrollHeight;
         }
         
         // Handle the message inside the webview
@@ -78,9 +102,7 @@
                     break;
                 case 'addBox':
                     var title = message.data.title;
-                    var status = message.data.status;
-
-                    addBox(title, status);
+                    addBox(title);
                     break;
                 case 'addLog':
                     var log = message.data.log;
@@ -88,7 +110,6 @@
                     break;
             }
         });
-    })
 
         </script>
 </html>

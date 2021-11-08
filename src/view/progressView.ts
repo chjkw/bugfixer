@@ -31,23 +31,41 @@ export class progressView {
 
     const resourceRoot = this.panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'resources')));
     this.panel.webview.html = contents.replace(/LOCAL_RESOURCE/g, resourceRoot.toString());
-    //const url = context.globalState.get("url", "");
-    
     this.panel.reveal(vscode.ViewColumn.One);
-
-
   }
   
   private static async getWebviewContent(extensionPath: string) {
     if(!this.htmlSrc) {
-		let filePath = path.join(extensionPath, 'src', 'static', 'timeline.html');
+		const filePath = path.join(extensionPath, 'src', 'static', 'timeline.html');
 		vscode.window.showInformationMessage(filePath);
       this.htmlSrc = fs.readFileSync(filePath, 'utf-8').toString();
     }
         
-    let contents = this.htmlSrc;
+    const contents = this.htmlSrc;
 
     return contents;
+  }
+
+  public static async addBox(title: string) {
+    if(this.panel) {
+      this.panel.webview.postMessage({ 
+        command: 'addBox',
+        data: {
+          "title": title
+        }
+      });
+    }
+  }
+
+  public static async addLog(log: string) {
+    if(this.panel) {
+      this.panel.webview.postMessage({ 
+        command: 'addLog',
+        data: {
+          "log": log
+        }
+      });
+    }
   }
 
   public static close() {
