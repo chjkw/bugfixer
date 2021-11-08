@@ -7,16 +7,20 @@ import {
 import * as child_process from "child_process";
 import * as path from "path";
 import * as vscode from "vscode";
+import {Logger} from "../logger/logger";
 import { kill } from "process";
 
 export class BugfixerController {
   private _commandForAnalysis: Disposable;
+  private logger:Logger;
 
   public constructor(private context: vscode.ExtensionContext) {
     this._commandForAnalysis = commands.registerCommand("bugfixer.run", 
     (uri:vscode.Uri) => {
       this.analyse(uri);
     });
+
+    this.logger = new Logger("b");
   }
 
   public dispose() {
@@ -69,8 +73,13 @@ export class BugfixerController {
             let log: string = data.toString();
             //result += log;
 
-            this.pushLog(log);
-            progress.report({ message: log});
+            if (log.startsWith("[")) {
+              let re = /^.* - /g;
+              log = log.replace(re, "");
+
+              this.pushLog(log);
+              progress.report({ message: log});
+            }
         });
 
         bugfixer.on("exit", (code) => {
@@ -96,6 +105,8 @@ export class BugfixerController {
   }
 
   private pushLog(log: string) {
+    this.logger.info("!! " + log + " !!");
+
     vscode.commands.executeCommand('bugfixer.pushLog', log);
   }
 }

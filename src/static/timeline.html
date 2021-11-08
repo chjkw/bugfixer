@@ -11,7 +11,7 @@
     <body>
         <div class="uk-container uk-padding">
             <div class="uk-timeline" id="timeline">
-                <div class="uk-timeline-item row">
+                <div class="uk-timeline-item row" name="timeline-item">
                     <div class="uk-timeline-icon">
                         <span class="uk-badge" name="badge"><div uk-spinner id="spinner"></div></span>
                     </div>
@@ -80,7 +80,9 @@
                     </div>
                 </div>
             `;
+            div.setAttribute('name', 'timeline-item');
             document.getElementById('timeline').appendChild(div);
+            
         }
 
         function addLog(log) {
@@ -91,7 +93,12 @@
             var nodes = document.querySelectorAll("[name='timeline-log']:last-child");
             var node = nodes[nodes.length - 1];
             node.appendChild(para);
-            node.scrollTop = node.scrollHeight;
+
+
+            var items = document.querySelectorAll("[name='timeline-item']");
+            var item = items[items.length - 1];
+            item.scrollTop = item.scrollHeight;
+            
         }
         
         // Handle the message inside the webview

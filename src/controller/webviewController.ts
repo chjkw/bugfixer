@@ -14,17 +14,14 @@ export class WebviewController {
   }
 
   public async pushLog(log: string) {
-    if (log.startsWith("[")){
-      if(log.startsWith("----")) {
-        let re = /^----/g;
-        const title = log.replace(re, "");
-        await progressView.progressView.addBox(title);
-      } else {
-        let re = /^.* - /g;
-        const newLog = log.replace(re, "");
-        await progressView.progressView.addLog(newLog);
-      }
+    if(log.startsWith("\n----")) {
+      let re = /\n----/g;
+      const title = log.replace(re, "");
+      await progressView.progressView.addBox(title);
+    } else {
+      await progressView.progressView.addLog(log);
     }
+    
   }
 }
 
