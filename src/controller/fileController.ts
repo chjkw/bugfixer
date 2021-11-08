@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { readFileSync } from 'fs';
 
-import EditorManager from './ide/editorManager';
+import EditorManager from '../ide/editorManager';
 
 export class FileController {
   constructor(private context: vscode.ExtensionContext) {
