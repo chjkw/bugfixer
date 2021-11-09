@@ -1,8 +1,8 @@
 {
-	"name": "bugfixerj",
-	"displayName": "BugfixerJ",
+	"name": "bugfixer",
+	"displayName": "Bugfixer",
 	"description": "",
-	"version": "0.0.1",
+	"version": "0.7.0",
 	"engines": {
 		"vscode": "^1.54.0"
 	},
@@ -13,7 +13,7 @@
 		"*"
 	],
 	"main": "./out/extension.js",
-	"contributes": {		
+	"contributes": {
 		"commands": [
 			{
 				"command": "bugfixer.run",
@@ -28,6 +28,23 @@
 				"title": "[BigFixer] Show Progress Page"
 			}
 		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "bugfixer-result",
+					"title": "Bugfixer 결과",
+					"icon": "resources/icon/bug-solid.svg"
+				}
+			]
+		},
+		"views": {
+			"bugfixer-result": [
+				{
+					"id": "bugfixerResult",
+					"name": "Bugfixer 결과"
+				}
+			]
+		},
 		"menus": {
 			"explorer/context": [
 				{
@@ -60,6 +77,8 @@
 	"dependencies": {
 		"class-transformer": "^0.4.0",
 		"es6-shim": "^0.35.6",
+		"get-all-files": "^4.1.0",
+		"globby": "^12.0.2",
 		"parse-diff": "^0.8.1",
 		"reflect-metadata": "^0.1.13"
 	}

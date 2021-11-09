@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import { BugfixerController } from './controller/bugfixerController';
 import { FileController } from './controller/fileController';
 import {WebviewController} from './controller/webviewController'
+import {ResultView} from './view/resultView';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -13,6 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	const f = new FileController(context);	
 	const wc = new WebviewController(context);
+	const r = new ResultView(context);
 }
 
 // this method is called when your extension is deactivated
