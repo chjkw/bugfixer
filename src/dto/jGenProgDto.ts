@@ -14,7 +14,8 @@ export class Patch {
 export class PatchChunk {
 	constructor(
 		public readonly PATH: string,
-		public readonly MODIFIED_FILE_PATH: string
+		public readonly MODIFIED_FILE_PATH: string,
+		public readonly LINE: string
 	) {}
 }
   

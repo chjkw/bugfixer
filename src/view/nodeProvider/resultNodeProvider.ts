@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from "path";
 import {getAllFilesSync } from 'get-all-files';
 import { readFileSync} from 'fs';
-import { Result, Patch, PatchChunk } from '../../dto/jGenProgDto';
+import { Result, PatchChunk } from '../../dto/jGenProgDto';
 import * as util from '../../common/util';
 
 export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
@@ -62,12 +62,11 @@ export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
 		return chunks.map(c => {
 			let re = /^.*\/src/g;
 			const src = this.currentResultFilePath + c.PATH.replace(re,"/src").replace(/\\\//g, "/");
-			const dst = this.currentResultFilePath + c.MODIFIED_FILE_PATH.replace(re,"/src").replace(/\\\//g, "/");
-
+			const dst = this.currentResultFilePath + c.MODIFIED_FILE_PATH.replace(re,"/src").replace(/\\\//g, "/").replace(/_f/g, "");
 			const filename = path.parse(src).base;
+			const line = c.LINE;
 
-
-			return new ChunkItem(src, dst, filename, vscode.TreeItemCollapsibleState.None);
+			return new ChunkItem(src, dst, line, filename, vscode.TreeItemCollapsibleState.None);
 		});
 	}
 }
@@ -103,7 +102,7 @@ export class PatchItem extends ResultItem {
 		public readonly chunks: PatchChunk[],
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 	) {
-		super(variantId, collapsibleState);
+		super(`Variant-${variantId}`, collapsibleState);
 		this.tooltip = `${this.label}`;
 		this.description = `${this.chunks.length}`;
 		this.contextValue = 'Patch';
@@ -114,19 +113,20 @@ export class ChunkItem extends ResultItem {
 	constructor (
 		public readonly src: string,
 		public readonly dst: string,
-		public readonly index: string,
+		public readonly line: string,
+		public readonly filename: string,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly command?: vscode.Command
 	) {
-		super(index, collapsibleState);
+		super(filename, collapsibleState);
 		this.command = {
 			command: 'bugfixer.diff',
 			arguments: [src, dst],
 			title: "패치 확인"
 		};
 
-		this.tooltip = `${this.label}`;
-		this.description = ``;
+		this.tooltip = `${this.label} | line ${line}`;
+		this.description = `line ${line}`;
 		this.contextValue = 'Chunk';
 	}
 }
