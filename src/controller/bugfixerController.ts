@@ -8,7 +8,6 @@ import * as child_process from "child_process";
 import * as path from "path";
 import * as vscode from "vscode";
 import {Logger} from "../logger/logger";
-import { kill } from "process";
 
 export class BugfixerController {
   private _commandForAnalysis: Disposable;
@@ -28,16 +27,17 @@ export class BugfixerController {
   }
 
   protected analyse(uri: vscode.Uri) {    
-    let workspacePath = vscode.workspace.getWorkspaceFolder(uri)?.uri.fsPath;
-
     let location = uri.fsPath;
     let id = path.basename(location);
+
+    const outputPath = path.join(location, "output");
+    this.context.globalState.update("bugfixer.outputPath", outputPath);
 
     let args: string[] = [
     "run",
     "--rm",
     "-v",
-    `${location}/output:/results`,
+    `${outputPath}:/results`,
     "tdurieux/astor",
     "-i",
     `${id}`, 

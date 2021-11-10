@@ -7,9 +7,10 @@ export class FileController {
   }
 
   private async diff(src: string, dst: string) {
-
-    const a = util.pathExists(src);
-    const b = util.pathExists(dst);
+    if(!util.pathExists(src) || !util.pathExists(dst)) {
+      await vscode.window.showErrorMessage("파일을 찾을 수 없습니다.");
+      return;
+    }
 
     await vscode.commands.executeCommand('vscode.diff', vscode.Uri.file(src), vscode.Uri.file(dst));
   }

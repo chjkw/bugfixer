@@ -8,5 +8,5 @@ export function pathExists(p: string): boolean {
 	}
   
 	return true;
-  }
+}
   

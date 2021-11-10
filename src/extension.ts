@@ -3,18 +3,20 @@
 import * as vscode from 'vscode';
 import { BugfixerController } from './controller/bugfixerController';
 import { FileController } from './controller/fileController';
-import {WebviewController} from './controller/webviewController'
+import {WebviewController} from './controller/webviewController';
 import {ResultView} from './view/resultView';
+import {TreeviewController} from "./controller/treeviewController";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	const bugfixer = new BugfixerController(context);
+	let bugfixer = new BugfixerController(context);
 	context.subscriptions.push(bugfixer);
-	
-	const f = new FileController(context);	
-	const wc = new WebviewController(context);
+
 	const r = new ResultView(context);
+	const wc = new WebviewController(context);
+	const tc = new TreeviewController(context);
+	const f = new FileController(context);	
 }
 
 // this method is called when your extension is deactivated

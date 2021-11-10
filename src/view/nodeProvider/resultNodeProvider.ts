@@ -1,13 +1,23 @@
 import * as vscode from 'vscode';
 import * as path from "path";
 import {getAllFilesSync } from 'get-all-files';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync} from 'fs';
 import { Result, Patch, PatchChunk } from '../../dto/jGenProgDto';
+import * as util from '../../common/util';
 
 export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
-	private outputPath: string = "/Users/chjkw/dev/autofix/bugfixerJ/bugfixerj/test/chart_1/output";
+	private outputPath: string = this.context.globalState.get<string>("bugfixer.outputPath", "");
+	private currentResultFilePath: string = "";
+
+	private _onDidChangeTreeData: vscode.EventEmitter<ResultItem | undefined> = new vscode.EventEmitter<ResultItem | undefined>();
+	readonly onDidChangeTreeData: vscode.Event<ResultItem | undefined> = this._onDidChangeTreeData.event;
 
 	constructor(private context: vscode.ExtensionContext) {
+		vscode.commands.registerCommand("bugfixer.refreshResult", () => this.refresh());
+	}
+
+	refresh(): void {
+		this._onDidChangeTreeData.fire(undefined);
 	}
 
 	getTreeItem(element: ResultItem): vscode.TreeItem {
@@ -15,6 +25,12 @@ export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
 	}
 
 	getChildren(element?: ResultItem): Thenable<ResultItem[]> {
+		this.outputPath = this.context.globalState.get<string>("bugfixer.outputPath", "");
+
+		if(!util.pathExists(this.outputPath)) {
+			return Promise.resolve([]);
+		}
+
 		if(element?.contextValue === "File") {
 			const r = element as FileItem;
 			return Promise.resolve(this.getPatchItems(r.file));
@@ -28,10 +44,6 @@ export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
 		}
 	}
 
-	public setOutputPath(path: string) {
-		this.outputPath = path;
-	}
-
 	private getFileItems() {
 		// glob output_path
 		const files = getAllFilesSync(this.outputPath).toArray().filter(f => f.endsWith("astor_output.json"));
@@ -41,7 +53,7 @@ export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
 	private getPatchItems(file: string) {
 		const jsonString = readFileSync(file, 'utf-8');
 		var data: Result = JSON.parse(jsonString);
-		this.setOutputPath(path.dirname(file));
+		this.currentResultFilePath = path.dirname(file);
 
 		return data.patches.map(p => new PatchItem(p.VARIANT_ID, file, p.patchhunks, vscode.TreeItemCollapsibleState.Collapsed));
 	}
@@ -49,10 +61,13 @@ export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
 	private getChunkItems(chunks: PatchChunk[]) {
 		return chunks.map(c => {
 			let re = /^.*\/src/g;
-			const src = this.outputPath + c.PATH.replace(re,"/src").replace(/\\\//g, "/");
-			const dst = this.outputPath + c.MODIFIED_FILE_PATH.replace(re,"/src").replace(/\\\//g, "/");
+			const src = this.currentResultFilePath + c.PATH.replace(re,"/src").replace(/\\\//g, "/");
+			const dst = this.currentResultFilePath + c.MODIFIED_FILE_PATH.replace(re,"/src").replace(/\\\//g, "/");
 
-			return new ChunkItem(src, dst, "0", vscode.TreeItemCollapsibleState.None);
+			const filename = path.parse(src).base;
+
+
+			return new ChunkItem(src, dst, filename, vscode.TreeItemCollapsibleState.None);
 		});
 	}
 }
@@ -78,10 +93,6 @@ export class FileItem extends ResultItem {
 		this.tooltip = `${this.label}`;
 		this.description = ``;
 		this.contextValue = 'File';
-	}
-
-	private static makeLabel(patch: Patch) {
-
 	}
 }
 
@@ -117,8 +128,6 @@ export class ChunkItem extends ResultItem {
 		this.tooltip = `${this.label}`;
 		this.description = ``;
 		this.contextValue = 'Chunk';
-		
-		
 	}
 }
 

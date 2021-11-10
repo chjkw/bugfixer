@@ -15,8 +15,11 @@ export class Logger {
   private ts: number = 0;
 
   constructor(private name: string) {
-	const time = this.getDateString();
-    this.logPath = path.resolve("/Users/chjkw/dev/autofix/bugfixerJ/bugfixerj", "logs", `vscode-extension.${time}.log`);
+    const workspaceConfig = workspace.getConfiguration();
+    const logDir = workspaceConfig.get("bugfixer.logPath", "");
+    
+	  const time = this.getDateString();
+    this.logPath = path.resolve(logDir, "logs", `vscode-extension.${time}.log`);
   }
 
   public info(m: string) {
@@ -64,8 +67,8 @@ export class Logger {
   }
 
   private log(level: LOG_LEVEL, m: string) {
-    const workspace_config = workspace.getConfiguration();
-    const logLevel = workspace_config.get("sparrow.logLevel", "debug");
+    const workspaceConfig = workspace.getConfiguration();
+    const logLevel = workspaceConfig.get("bugfixer.logLevel", "debug");
 
     let currentLogLevel: LOG_LEVEL | undefined = (<any>LOG_LEVEL)[logLevel.toUpperCase()];
     if (currentLogLevel === undefined) {
