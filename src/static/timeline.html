@@ -16,7 +16,7 @@
                         <span class="uk-badge" name="badge"><div uk-spinner id="spinner"></div></span>
                     </div>
                     <div class="uk-timeline-content">
-                        <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
+                        <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto"  name="timeline-card">
                             <section class="uk-sticky-card-wrapper">
                             <div class="uk-sticky-card-header">
                                 <div class="uk-grid-small uk-flex-middle uk-sticky-card-header-data" uk-grid>
@@ -61,12 +61,11 @@
 
             div.className = 'uk-timeline-item row';
             div.innerHTML = `
-            
                 <div class="uk-timeline-icon">
                     <span class="uk-badge" name="badge"><div uk-spinner id="spinner"></div></span>
                 </div>
                 <div class="uk-timeline-content">
-                    <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
+                    <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto" name="timeline-card">
                         <section class="uk-sticky-card-wrapper">
                         <div class="uk-sticky-card-header">
                             <div class="uk-grid-small uk-flex-middle uk-sticky-card-header-data" uk-grid>
@@ -82,7 +81,6 @@
             `;
             div.setAttribute('name', 'timeline-item');
             document.getElementById('timeline').appendChild(div);
-            
         }
 
         function addLog(log) {
@@ -94,11 +92,9 @@
             var node = nodes[nodes.length - 1];
             node.appendChild(para);
 
-
-            var items = document.querySelectorAll("[name='timeline-item']");
+            var items = document.querySelectorAll("[name='timeline-card']");
             var item = items[items.length - 1];
             item.scrollTop = item.scrollHeight;
-            
         }
         
         // Handle the message inside the webview
@@ -120,7 +116,3 @@
 
         </script>
 </html>
-
-
-
-
