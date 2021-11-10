@@ -8,7 +8,6 @@ export class ResultView {
   constructor(private context: vscode.ExtensionContext) {
     this.provider = new ResultNodeProvider(context);
     this.view = vscode.window.createTreeView('bugfixerResult', {treeDataProvider: this.provider, showCollapseAll:false});
-
   }
   
 }
