@@ -10,7 +10,8 @@ export class TreeviewController {
 
   private async setOutputPath() {
     const path = await vscode.window.showInputBox({ 
-      placeHolder: '결과 경로를 입력하세요'
+      placeHolder: this.context.globalState.get("bugfixer.outputPath", "경로를 입력하세요."),
+      title: '도구 실행 결과 위치'
     });
     
     if (path !== null && path !== undefined) {

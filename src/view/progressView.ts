@@ -36,8 +36,7 @@ export class ProgressView {
   
   private static async getWebviewContent(extensionPath: string) {
     if(!this.htmlSrc) {
-		const filePath = path.join(extensionPath, 'src', 'static', 'timeline.html');
-		vscode.window.showInformationMessage(filePath);
+  		const filePath = path.join(extensionPath, 'src', 'static', 'timeline.html');
       this.htmlSrc = fs.readFileSync(filePath, 'utf-8').toString();
     }
         

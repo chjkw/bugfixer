@@ -47,7 +47,7 @@ export class ResultNodeProvider implements vscode.TreeDataProvider<ResultItem> {
 	private getFileItems() {
 		// glob output_path
 		const files = getAllFilesSync(this.outputPath).toArray().filter(f => f.endsWith("astor_output.json"));
-		return files.map(f => new FileItem(f, vscode.TreeItemCollapsibleState.Collapsed));
+		return files.map(f => new FileItem(f, f.replace(this.outputPath, "").replace("astor_output.json", ""), vscode.TreeItemCollapsibleState.Collapsed));
 	}
 
 	private getPatchItems(file: string) {
@@ -86,10 +86,11 @@ export class ResultItem extends vscode.TreeItem {
 export class FileItem extends ResultItem {
 	constructor (
 		public readonly file: string,
+		public readonly label: string,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 	) {
-		super(file, collapsibleState);
-		this.tooltip = `${this.label}`;
+		super(label, collapsibleState);
+		this.tooltip = this.file;
 		this.description = ``;
 		this.contextValue = 'File';
 	}
