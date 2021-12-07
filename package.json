@@ -15,28 +15,41 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"configuration": [
-      {
-        "type": "object",
-        "title": "Bugfixer 설정",
-        "properties": {
-          "bugfixer.logPath": {
-            "type": "string",
-            "default": "",
-            "description": "Bugfixer 로그 디렉토리"
-          },
-          "bugfixer.logLevel": {
-            "type": "string",
-            "default": "trace",
-            "enum": [
-              "info",
-              "debug",
-              "trace"
-            ],
-            "description": "로그 수준"
-          }
-        }
-      }
-    ],
+      	{
+			"type": "object",
+			"title": "Bugfixer 설정",
+			"properties": {
+				"bugfixer.engineType": {
+					"type": "string",
+					"default": "astor",
+					"enum": [
+						"astor",
+						"prophet"
+					],
+					"description": "엔진 종류"
+				},
+				"bugfixer.engineOption": {
+					"type": "string",
+					"default": "trace",
+					"description": "추가 옵션"
+				},
+				"bugfixer.logPath": {
+					"type": "string",
+					"default": "",
+					"description": "Bugfixer 로그 디렉토리"
+				},
+				"bugfixer.logLevel": {
+					"type": "string",
+					"default": "trace",
+					"enum": [
+						"info",
+						"debug",
+						"trace"
+					],
+					"description": "로그 수준"
+				}
+			}
+		}],
 		"commands": [
 			{
 				"command": "bugfixer.run",
